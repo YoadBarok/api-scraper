@@ -28,7 +28,7 @@ export class Scraper {
     /*
     Takes data: object - the response from the scrape function, and adds the products to the products array.
     */
-    processResponse(data) {
+    consumeResponse(data) {
         /*
         For each product, check if it has a key in the productMap, 
         if not create a key, and push the product to the array.
@@ -39,9 +39,6 @@ export class Scraper {
                 this.products.push(product);
             }
         })
-        if (this.targetLength === 0) {
-            this.targetLength = data.total;
-        }
     }
 
     /*
@@ -50,12 +47,5 @@ export class Scraper {
     getHighestPrice(arr) {
         return _.maxBy(arr, 'price').price;
     }
-
-    /*
-    Takes arr: array, and returns the price of the cheapest item in that array
-    */
-   getLowestPrice(arr) {
-    return _.minBy(arr, 'price').price;
-   }
-
+    
 }

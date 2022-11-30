@@ -51,7 +51,7 @@ export class Scraper {
         while (arr.length < this.targetLength) {
             // set minPrice to the price of the currently most expensive product in the array - 1.
             let minPrice = this.getHighestPrice(arr) - 1;
-            let data = this.scrape(URL, { minPrice: minPrice });
+            let data = await this.scrape(URL, { minPrice: minPrice });
             this.consumeResponse(data, arr);
         }
     }

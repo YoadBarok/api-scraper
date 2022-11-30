@@ -4,12 +4,8 @@ import _ from "lodash";
 export class Scraper {
 
     constructor() {
-        // The array that will contain the products.
-        this.products = [];
         // A map for quick checking if a product is already added.
         this.productMap = {};
-        // Will be set to the "total" attribute of the response after the first call to the API.
-        this.targetLength = 0;
     }
 
     /*
@@ -26,19 +22,31 @@ export class Scraper {
     }
 
     /*
-    Takes data: object - the response from the scrape function, and adds the products to the products array.
+    Takes data: object - the response from the scrape function, arr - array, 
+    and adds the products from data to the given array.
     */
-    consumeResponse(data) {
+    consumeResponse(data, arr) {
         /*
         For each product, check if it has a key in the productMap, 
-        if not create a key, and push the product to the array.
-        */ 
+        if not create an entry, and push the product to the array.
+        */
         data.products.forEach(product => {
             if (!this.productMap[product.id]) {
                 this.productMap[product.id] = 1;
-                this.products.push(product);
+                arr.push(product);
             }
         })
+    }
+
+    // Takes arr: array, and makes calls to the API until the length of arr equals to the targetLength.
+    async fillProductsArray(arr) {
+        // Keep making requests until the products array contains all products
+        while (arr.length < this.targetLength) {
+            // set minPrice to the price of the currently most expensive product in the array.
+            let minPrice = this.getHighestPrice(arr);
+            let data = this.scrape(URL, { minPrice: minPrice });
+            this.consumeResponse(data, arr);
+        }
     }
 
     /*
@@ -47,5 +55,5 @@ export class Scraper {
     getHighestPrice(arr) {
         return _.maxBy(arr, 'price').price;
     }
-    
+
 }

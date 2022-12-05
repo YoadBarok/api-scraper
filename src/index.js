@@ -4,15 +4,14 @@ import { Scraper } from "./utils/Scraper.js";
 const URL = process.env.URL;
 
 const products = [];
-const scraper = new Scraper();
+// Instantiate a new scraper with the maxPrice of 100000
+const scraper = new Scraper(URL ,100000);
 
-// Get the data from the initial response.
-const data = await scraper.scrape(URL, { minPrice: 0 });
-scraper.consumeResponse(data, products);
+// Get the products in the lower half of the price range:
+await scraper.getFirstHalf(products);
 
-// Set the targetLength attribute of the scraper based on the total attribute of the initial response.
-scraper.targetLength = data.total;
-
-// Fill the products array with all products from the API.
-await scraper.fillProductsArray(products);
-
+// If we didn't get all the products in the first half:
+if (!scraper.targetLength === products.length) {
+    // Get the products in the higher half of the price range:
+    await scraper.getSecondHalf(products);
+}

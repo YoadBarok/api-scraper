@@ -124,6 +124,9 @@ export class Scraper {
                 maxPrice = maxPrice * 2 > this.maxPrice ? this.maxPrice : maxPrice * 2;
             }
             data = await this.scrape({ minPrice: minPrice, maxPrice: maxPrice })
+
+            // If the minPrice is equal to the maxPrice => break, in order to avoid infinite loop.
+            if (maxPrice === minPrice) break;
         }
         // Add the products to the array one last time after breaking from the loop.
         this.consumeResponse(data, arr);

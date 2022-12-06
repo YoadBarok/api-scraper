@@ -11,7 +11,7 @@ const scraper = new Scraper(URL ,100000);
 await scraper.getFirstHalf(products);
 
 // If we didn't get all the products in the first half:
-if (!scraper.targetLength === products.length) {
+if (scraper.targetLength !== products.length) {
     // Get the products in the higher half of the price range:
     await scraper.getSecondHalf(products);
 }
